@@ -1,0 +1,25 @@
+applications:
+- name: rishabh_pcf 
+  health-check-type: process
+  timeout: 5
+  instances: 2
+  memory: 250M
+  buildpacks: 
+    - python_buildpack
+  routes:
+    - route: rishabh_app_test.apps.pcf-harness.com
+    - route: rishabh_app_test_worker.apps.pcf-harness.com
+      destinations:
+        - destination: 
+          app:
+            process:
+              type: worker
+          port: 8081
+  processes:
+    - type: web
+      command: python3 app.py web 8080
+      memory: 250M
+    - type: worker
+      command: python3 app.py worker 8081
+      memory: 250M
+      instances: 1
